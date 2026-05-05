@@ -1,0 +1,52 @@
+name: codebuddy-cli
+description: 通过 CodeBuddy CLI（codebuddy 命令行）执行用户指令的技能。支持非交互模式调用、超时处理、任务拆分策略，可无缝接入 CodeBuddy AI 能力完成代码分析、自动化脚本、日常问答等任务。
+author: FE-xiaoJiang
+version: 1.0.0
+tool_name: codebuddy_cli
+entry_point: SKILL.md
+
+capabilities:
+  - non-interactive CLI invocation (cb -p / codebuddy -p)
+  - timeout and error handling
+  - task decomposition strategy
+  - structured output parsing
+  - multi-turn conversation support
+
+requirements:
+  - CodeBuddy CLI installed (cb or codebuddy command available in PATH)
+
+configuration:
+  environment_variables:
+    CODEBUDDY_API_KEY: "CodeBuddy API Key（可选，某些部署需要）"
+    CODEBUDDY_BASE_URL: "CodeBuddy 服务地址（可选，默认使用内置地址）"
+  notes:
+    - "CodeBuddy CLI 需提前安装并加入 PATH"
+    - "非交互模式使用 -p / --prompt 参数"
+    - "默认超时建议设置为 300 秒，复杂任务可适当延长"
+
+usage:
+  basic: "cb -p '你的问题或任务'"
+  with_timeout: "cb -p '任务描述' --timeout 600"
+  via_skill_trigger: "触发关键词：用 cb 执行 / cb -p / 用 codebuddy cli / cb 继续"
+
+examples:
+  - description: "基础代码问题分析"
+    code: |
+      cb -p "分析以下代码的性能瓶颈：\n```python\ndef slow(n):\n    return sum(i**2 for i in range(n))\n```"
+  
+  - description: "生成单元测试"
+    code: |
+      cb -p "为以下函数生成 pytest 单元测试，覆盖正常和异常分支" --timeout 300
+  
+  - description: "长任务拆分（复杂需求）"
+    code: |
+      # Step 1: 需求分析
+      cb -p "分析这个需求：实现一个带有缓存的 HTTP 客户端，输出设计方案"
+      # Step 2: 按方案逐步实现
+      cb -p "根据方案实现缓存层代码"
+      cb -p "根据方案实现 HTTP 客户端主类"
+
+notes:
+  - "复杂任务建议分阶段执行，每阶段一个 cb -p 调用"
+  - "输出为纯文本，需要后处理时可用脚本包装"
+  - "timeout 默认值可能因部署而异，长任务请显式指定 --timeout"
